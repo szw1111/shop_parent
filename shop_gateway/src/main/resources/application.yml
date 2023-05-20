@@ -1,0 +1,32 @@
+server:
+  port: 80
+spring:
+  redis:
+    host: 192.168.175.110
+    port: 6389
+  application:
+    name: shop-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.175.110:8848
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: shop-product
+          uri: lb://shop-product
+          predicates:
+            - Path=/product/**
+        - id: shop-web
+          uri: lb://shop-web
+          predicates:
+            - Host=*.gmall.com, 127.0.0.1
+      globalcors:
+       cors-configurations:
+         '[/**]':
+           allowedOrigins: "*"
+           allowedMethods: "*"
+           allowedHeaders: "*"
+           allowCredentials: true
